@@ -15,7 +15,7 @@ We use the **KSS dataset**, a Korean single-speaker voice dataset from Kaggle, t
 ## Technologies Used
 - **Programming Language**: Python 
 - **Frameworks & Libraries**:
-  - PyTorch ⚡
+  - PyTorch 
   - NumPy, Pandas 
   - Matplotlib, Seaborn (for visualization)
   - Soundfile (for audio storage and conversion)
