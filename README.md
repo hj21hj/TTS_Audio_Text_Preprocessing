@@ -5,5 +5,5 @@
 캐글의 한국어 단일 화자 음성 데이터셋 KSS dataset을 사용해 한국어 TTS를 구현했습니다. 
 음향모델 및 보코더 구현체는 아래 레포지토리를 사용했습니다. 
 
-- [Tacotron2]https://github.com/hccho2/Tacotron2-Wavenet-Korean-TTS/tree/master
-- [WaveGlow]https://github.com/NVIDIA/waveglow
+- [Tacotron2] https://github.com/hccho2/Tacotron2-Wavenet-Korean-TTS/tree/master
+- [WaveGlow] https://github.com/NVIDIA/waveglow
