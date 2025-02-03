@@ -1,4 +1,3 @@
-```markdown
 <details>
 <summary>🇺🇸 Click to see English README</summary>
 
