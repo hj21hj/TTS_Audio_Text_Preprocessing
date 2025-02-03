@@ -1,7 +1,7 @@
 <details>
 <summary>🇺🇸 Click to see English README</summary>
 
-# 🎤 Audio_Text_Preprocessing
+# 🎤 TTS_Audio_Text_Preprocessing
 
 This project provides audio-text preprocessing and model training code for Korean TTS (Text-to-Speech). 
 We use the **KSS dataset**, a Korean single-speaker voice dataset from Kaggle, to implement a Tacotron2 and WaveGlow-based Korean TTS system. 
@@ -73,7 +73,7 @@ python main.py --mode synthesize --text "Hello. This is a Korean TTS project."
 
 ---
 
-# 🎵 Audio_Text_Preprocessing
+# 🎵 TTS_Audio_Text_Preprocessing
 
 한국어 TTS(Text-to-Speech)를 위한 오디오-텍스트 데이터 전처리 및 모델 학습 코드입니다! 
 Kaggle의 한국어 단일 화자 음성 데이터셋 **KSS dataset**을 사용하여 Tacotron2와 WaveGlow 기반의 한국어 TTS를 구현합니다.
