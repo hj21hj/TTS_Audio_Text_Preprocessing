@@ -106,7 +106,7 @@ class Synthesizer:
         self.tacotron = Tacotron2(self.hparams).to(device).eval()
         self.tacotron = load_checkpoint(tacotron_check, self.tacotron)
 
-        with open('/Users/seohyeon/Desktop/코드모음/project/TTS/my_tts/waveglow/config.json') as f:
+        with open('/waveglow/config.json') as f:
             waveglow_config = json.load(f)["waveglow_config"]
     
         self.waveglow = WaveGlow(**waveglow_config).to(device).eval()
