@@ -14,8 +14,20 @@ from .model import Tacotron2
 from .data_utils import TextMelLoader, TextMelCollate
 from .loss_function import Tacotron2Loss
 from .logger import Tacotron2Logger
-from tacotron2.hparams import get_hparams
+from .hparams import add_hparams, get_hparams
 
+
+"""
+수정사항 2가지
+1. DDP=True 로 학습된 사전학습 가중치를 불러오는 경우, module. prefix 가 붙어 로드 시 문제가 발생함.
+    해당 prefix를 삭제하는 함수를 구현해 추가함.
+2. 체크포인트 로드 시, embedding.weight의 크기가 맞지 않은 부분은 무시하고, 나머지 부분만 가중치 불러와 사용함
+
+"""
+
+def remove_module_prefix(state_dict):
+    """모델 state_dict에서 'module.' prefix 제거"""
+    return {k.replace("module.", ""): v for k, v in state_dict.items()}
 
 def reduce_tensor(tensor, n_gpus):
     rt = tensor.clone()
@@ -70,8 +82,8 @@ def prepare_directories_and_logger(output_directory, log_directory, rank):
     return logger
 
 
-def load_model(hparams):
-    model = Tacotron2(hparams).cuda()
+def load_model(hparams, device):
+    model = Tacotron2(hparams).to(device)
     if hparams.fp16_run:
         model.decoder.attention_layer.score_mask_value = finfo('float16').min
 
@@ -85,14 +97,21 @@ def warm_start_model(checkpoint_path, model, ignore_layers):
     assert os.path.isfile(checkpoint_path)
     print("Warm starting model from checkpoint '{}'".format(checkpoint_path))
     checkpoint_dict = torch.load(checkpoint_path, map_location='cpu')
-    model_dict = checkpoint_dict['state_dict']
+
+
+    # "module." prefix 제거
+    model_dict = remove_module_prefix(checkpoint_dict['state_dict'])
+    # 크기 맞지 않는 경우 해당 사전학습 가중치 사용 x
+    if 'embedding.weight' in model_dict:
+        del model_dict['embedding.weight']
+    # model_dict = checkpoint_dict['state_dict']
     if len(ignore_layers) > 0:
         model_dict = {k: v for k, v in model_dict.items()
                       if k not in ignore_layers}
         dummy_dict = model.state_dict()
         dummy_dict.update(model_dict)
         model_dict = dummy_dict
-    model.load_state_dict(model_dict)
+    model.load_state_dict(model_dict, strict=False)
     return model
 
 
@@ -100,7 +119,17 @@ def load_checkpoint(checkpoint_path, model, optimizer):
     assert os.path.isfile(checkpoint_path)
     print("Loading checkpoint '{}'".format(checkpoint_path))
     checkpoint_dict = torch.load(checkpoint_path, map_location='cpu')
-    model.load_state_dict(checkpoint_dict['state_dict'])
+    
+    # "module." prefix 제거
+    clean_state_dict = remove_module_prefix(checkpoint_dict['state_dict'])
+    # 크기 맞지 않는 경우 해당 사전학습 가중치 사용 x
+    if 'embedding.weight' in clean_state_dict:
+        del clean_state_dict['embedding.weight']
+    # 모델 가중치 적용
+    model.load_state_dict(clean_state_dict, strict=False)  
+    # model.load_state_dict(checkpoint_dict['state_dict'])
+
+
     optimizer.load_state_dict(checkpoint_dict['optimizer'])
     learning_rate = checkpoint_dict['learning_rate']
     iteration = checkpoint_dict['iteration']
@@ -147,7 +176,7 @@ def validate(model, criterion, valset, iteration, batch_size, n_gpus,
 
 
 def train(output_directory, log_directory, checkpoint_path, warm_start, n_gpus,
-          rank, group_name, hparams):
+          rank, group_name, hparams, device):
     """Training and validation logging results to tensorboard and stdout
 
     Params
@@ -165,7 +194,7 @@ def train(output_directory, log_directory, checkpoint_path, warm_start, n_gpus,
     torch.manual_seed(hparams.seed)
     torch.cuda.manual_seed(hparams.seed)
 
-    model = load_model(hparams)
+    model = load_model(hparams, device)
     learning_rate = hparams.learning_rate
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate,
                                  weight_decay=hparams.weight_decay)
@@ -257,9 +286,9 @@ def train(output_directory, log_directory, checkpoint_path, warm_start, n_gpus,
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-o', '--output_directory', type=str,
+    parser.add_argument('-o', '--output_directory', type=str, required=True,
                         help='directory to save checkpoints')
-    parser.add_argument('-l', '--log_directory', type=str,
+    parser.add_argument('-l', '--log_directory', type=str, required=True,
                         help='directory to save tensorboard logs')
     parser.add_argument('-c', '--checkpoint_path', type=str, default=None,
                         required=False, help='checkpoint path')
@@ -271,11 +300,11 @@ if __name__ == '__main__':
                         required=False, help='rank of current gpu')
     parser.add_argument('--group_name', type=str, default='group_name',
                         required=False, help='Distributed group name')
-    parser.add_argument('--hparams', type=str,
-                        required=False, help='comma separated name=value pairs')
 
+    add_hparams(parser)
     args = parser.parse_args()
-    hparams = get_hparams(args.hparams)
+
+    hparams = get_hparams(args, parser)
 
     torch.backends.cudnn.enabled = hparams.cudnn_enabled
     torch.backends.cudnn.benchmark = hparams.cudnn_benchmark
