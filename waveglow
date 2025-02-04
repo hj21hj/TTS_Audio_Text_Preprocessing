@@ -1,3 +1,0 @@
-# Clone the NVIDIA WaveGlow repository
-git clone https://github.com/NVIDIA/waveglow.git
-# Move the internal files from the cloned waveglow directory into this folder
