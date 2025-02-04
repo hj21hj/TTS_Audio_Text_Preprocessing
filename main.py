@@ -23,14 +23,7 @@ def remove_module_prefix(state_dict):
 def train_tacotron(args):
     hparams = get_hparams(args, parser)
 
-    if args.output_directory is None:
-        args.output_directory = "/Users/seohyeon/Desktop/코드모음/project/TTS/my_tts/res/output"
-    
-    if args.log_directory is None:
-        args.log_directory = "/Users/seohyeon/Desktop/코드모음/project/TTS/my_tts/res/logs"
-
     hparams.cudnn_enabled = False
-
     torch.backends.cudnn.enabled = hparams.cudnn_enabled
     torch.backends.cudnn.benchmark = hparams.cudnn_benchmark
     
@@ -140,7 +133,8 @@ if __name__ == '__main__':
     
     parser.add_argument('-o', '--output_directory', default="res/checkpoints",
                         type=str, help='Directory to save checkpoints')
-    parser.add_argument('-l', '--log_directory', type=str, help='Directory to save logs')
+    parser.add_argument('-l', '--log_directory', default="res/logs",
+                        type=str, help='Directory to save logs')
     parser.add_argument('-c', '--checkpoint_path', type=str, default=None, help='Checkpoint path for loading')
     
     parser.add_argument('--warm_start', action='store_true', help='Load model weights only')
