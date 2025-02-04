@@ -8,6 +8,3 @@ git clone https://github.com/hccho2/Tacotron2-Wavenet-Korean-TTS.git
 
 # Clone the NVIDIA WaveGlow repository
 git clone https://github.com/NVIDIA/waveglow.git
-
-# Download KSS dataset 
-kaggle datasets download -d bryanpark/korean-single-speaker-speech-dataset -p ./Dataset --unzip
