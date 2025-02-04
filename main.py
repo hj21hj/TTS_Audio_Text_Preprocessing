@@ -56,7 +56,9 @@ def train_waveglow(args):
     data_config = config["data_config"]
     dist_config = config["dist_config"]
     waveglow_config = config["waveglow_config"]
-
+    
+    train_config["output_directory"] = args.output_directory # Waveglow와 Tacotron2의 checkpoint 저장 디렉토리 통일
+    
     set_waveglow_config(waveglow_config)
     set_data_config(data_config)
     set_dist_config(dist_config)
@@ -136,29 +138,37 @@ if __name__ == '__main__':
     parser.add_argument('--mode', type=str, default='train_tacotron', choices=['train_tacotron', 'train_waveglow', 'synthesize'], # required=True,
                         help='Choose mode: train_tacotron, train_waveglow, synthesize')
     
-    parser.add_argument('-o', '--output_directory', default="/Users/seohyeon/Desktop/코드모음/project/TTS/my_tts/res/output",
+    parser.add_argument('-o', '--output_directory', default="res/checkpoints",
                         type=str, help='Directory to save checkpoints')
     parser.add_argument('-l', '--log_directory', type=str, help='Directory to save logs')
-    parser.add_argument('-c', '--checkpoint_path', type=str, default=None, help='Checkpoint path')
+    parser.add_argument('-c', '--checkpoint_path', type=str, default=None, help='Checkpoint path for loading')
+    
     parser.add_argument('--warm_start', action='store_true', help='Load model weights only')
     parser.add_argument('--n_gpus', type=int, default=1, help='Number of GPUs')
     parser.add_argument('--rank', type=int, default=0, help='GPU rank')
     parser.add_argument('--group_name', type=str, default='group_name', help='Distributed training group name')
 
     parser.add_argument('--config', type=str, help='JSON configuration file for WaveGlow training', required=False)
-    parser.add_argument('--tacotron_checkpoint', default="/Users/seohyeon/Desktop/코드모음/project/TTS/my_tts/res/checkpoints/checkpoint_0.pt",
-                        type=str, help='Path to Tacotron2 checkpoint', required=False)
-    parser.add_argument('--waveglow_checkpoint', default="/Users/seohyeon/Desktop/코드모음/project/TTS/my_tts/res/checkpoints/waveglow_0.pt", 
-                        type=str, help='Path to WaveGlow checkpoint', required=False)
+    
+    # Path to load Best models 
+    parser.add_argument('--tacotron_checkpoint', default="res/checkpoints/best_tacotron2.pt",
+                        type=str, help='Path to load Best Tacotron2 model', required=False)
+    parser.add_argument('--waveglow_checkpoint', default="res/checkpoints/best_waveglow.pt", 
+                        type=str, help='Path to load Best WaveGlow model', required=False)
+    
+    
     parser.add_argument('--text', type=str, default="안녕하세요.", help='Text to synthesize', required=False)
-    parser.add_argument('--output_audio', default="/Users/seohyeon/Desktop/코드모음/project/TTS/my_tts/res/output_audio/ex3.wav",
+    parser.add_argument('--output_audio', default="res/output_audio/ex3.wav",
                         type=str, help='Path to save synthesized audio', required=False)
-
 
     add_hparams(parser)
 
     args = parser.parse_args()
     hparams = get_hparams(args, parser)
+    
+
+
+
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
