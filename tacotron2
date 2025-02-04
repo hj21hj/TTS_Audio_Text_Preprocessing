@@ -1,7 +1,0 @@
-# Clone the NVIDIA Tacotron2 repository
-git clone https://github.com/NVIDIA/tacotron2.git
-# Move the internal folders from the cloned tacotron2 directory into this folder
-
-# Clone the hccho2 Tacotron2-Wavenet-Korean-TTS repository
-git clone https://github.com/hccho2/Tacotron2-Wavenet-Korean-TTS.git
-# Move the internal files from Tacotron2-Wavenet-Korean-TTS/text into the tacotron2/text folder
