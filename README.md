@@ -191,8 +191,8 @@ python main.py --mode synthesize --text "안녕하세요. 한국어 TTS 프로�
 5. Pull Request를 생성합니다.
 
 ## 📚 참고 자료 
-- [Tacotron2] (https://github.com/NVIDIA/tacotron2)
-- [Text folder for Korean language](https://github.com/hccho2/Tacotron2-Wavenet-Korean-TTS/text)
+- [Tacotron2](https://github.com/NVIDIA/tacotron2)
+- [Text folder for Korean language](https://github.com/hccho2/Tacotron2-Wavenet-Korean-TTS)
 - [WaveGlow](https://github.com/NVIDIA/waveglow)
 
 ## 📜 라이선스 
