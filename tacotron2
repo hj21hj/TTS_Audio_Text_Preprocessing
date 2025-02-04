@@ -1,3 +1,7 @@
-# git clone https://github.com/hccho2/Tacotron2-Wavenet-Korean-TTS.git
-# cd Tacotron2-Wavenet-Korean-TTS 의 내부 코드를 해당 폴더에 넣어주세요.
+# git clone https://github.com/NVIDIA/tacotron2.git
+# cd tacotron2
+
+
+# git clone https://github.com/hccho2/Tacotron2-Wavenet-Korean-TTS/text.git
+# cd Tacotron2-Wavenet-Korean-TTS/text 의 내부 코드를 tacotron2/text 폴더에 넣어주세요.
 
