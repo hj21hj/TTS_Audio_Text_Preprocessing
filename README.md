@@ -1,5 +1,5 @@
 <details>
-<summary>🇺🇸 Click to see English README</summary>
+<summary>Click to see English README</summary>
 
 # 🎤 TTS_Audio_Text_Preprocessing
 
