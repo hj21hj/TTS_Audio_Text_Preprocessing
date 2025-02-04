@@ -1,0 +1,10 @@
+# Clone the NVIDIA Tacotron2 repository
+cd tacotron2
+git clone https://github.com/NVIDIA/tacotron2.git
+
+# Clone the hccho2 Tacotron2-Wavenet-Korean-TTS repository
+git clone https://github.com/hccho2/Tacotron2-Wavenet-Korean-TTS.git
+# Replace the tacotron2/text to Tacotron2-Wavenet-Korean-TTS/text 
+
+# Clone the NVIDIA WaveGlow repository
+git clone https://github.com/NVIDIA/waveglow.git
