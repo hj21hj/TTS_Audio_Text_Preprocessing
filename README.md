@@ -30,10 +30,14 @@ Run the following command to install necessary packages:
 pip install torch numpy pandas matplotlib soundfile
 ```
 
-#### (2) Clone Tacotron2 & WaveGlow Repositories
+#### (2) Clone Korean text cleaning & Tacotron2 & WaveGlow Repositories
 ```bash
-git clone https://github.com/hccho2/Tacotron2-Wavenet-Korean-TTS.git
-cd Tacotron2-Wavenet-Korean-TTS
+git clone https://github.com/hccho2/Tacotron2-Wavenet-Korean-TTS/text.git
+cd text 
+```
+``bash
+git clone https://github.com/NVIDIA/tacotron2.git
+cd tacotron2
 ```
 ```bash
 git clone https://github.com/NVIDIA/waveglow.git
@@ -45,11 +49,11 @@ Download the KSS dataset and place it in the `Dataset/` directory.
 [KSS dataset](https://www.kaggle.com/bryanpark/korean-single-speaker-speech-dataset)
 
 ### 3. Run Preprocessing & EDA
-#### (1) Data Exploration & Preprocessing
+#### (1) Data Exploration & Preprocessing (required)
 ```bash
 jupyter notebook preprocessing_EDA.ipynb
 ```
-#### (2) Run Preprocessing Code
+#### (2) Run Preprocessing Code (optional)
 ```bash
 jupyter notebook audio_text_preprocessing.ipynb
 ```
@@ -69,6 +73,25 @@ Generate speech from text using trained models:
 ```bash
 python main.py --mode synthesize --text "Hello. This is a Korean TTS project."
 ```
+
+## Directory structure
+
+```bash
+📂 Audio_Text_Preprocessing
+├── preprocessing_EDA.ipynb  # Data exploration and preprocessing visualization code
+├── audio_text_preprocessing.ipynb  # Audio and text preprocessing code
+├── main.py  # Model training and speech synthesis execution file
+├── tacotron2/
+    ├── text/  # Move the internal code from Tacotron2-Wavenet-Korean-TTS/text (by hccho2) into this folder
+    ├── ...
+├── waveglow/
+├── Dataset/  # Directory for storing the KSS dataset
+├── res/
+│   ├── output/  # Directory for saving generated speech files
+│   ├── logs/  # Directory for storing training logs
+│   ├── checkpoints/  # Directory for saving model checkpoints
+```
+
 </details>
 
 ---
@@ -101,10 +124,14 @@ Kaggle의 한국어 단일 화자 음성 데이터셋 **KSS dataset**을 사용�
 pip install torch numpy pandas matplotlib soundfile
 ```
 
-#### (2) Tacotron2 및 WaveGlow 레포지토리 클론
+#### (2) 한국어 Text cleaning 및 Tacotron2 및 WaveGlow 레포지토리 클론
 ```bash
-git clone https://github.com/hccho2/Tacotron2-Wavenet-Korean-TTS.git
-cd Tacotron2-Wavenet-Korean-TTS
+git clone https://github.com/hccho2/Tacotron2-Wavenet-Korean-TTS/text.git
+cd text 
+```
+``bash
+git clone https://github.com/NVIDIA/tacotron2.git
+cd tacotron2
 ```
 ```bash
 git clone https://github.com/NVIDIA/waveglow.git
@@ -115,11 +142,11 @@ cd waveglow
 [KSS dataset](https://www.kaggle.com/bryanpark/korean-single-speaker-speech-dataset)을 다운로드한 후, `Dataset/` 디렉토리에 저장합니다.
 
 ### 3. 데이터 전처리 및 분석 실행
-#### (1) 데이터 탐색 및 전처리 실행
+#### (1) 데이터 탐색 및 전처리 실행 (required)
 ```bash
 jupyter notebook preprocessing_EDA.ipynb
 ```
-#### (2) 데이터 전처리 코드 실행
+#### (2) 데이터 전처리 코드 실행 (optional)
 ```bash
 jupyter notebook audio_text_preprocessing.ipynb
 ```
@@ -146,6 +173,8 @@ python main.py --mode synthesize --text "안녕하세요. 한국어 TTS 프로�
 ├── audio_text_preprocessing.ipynb  # 오디오 및 텍스트 전처리 코드
 ├── main.py  # 모델 학습 및 음성 합성 실행 파일
 ├── tacotron2/
+    ├── text/  # hccho2 개발자의 Tacotron2-Wavenet-Korean-TTS/text 내부 코드를 해당 폴더 내로 이동
+    ├── ...
 ├── waveglow/
 ├── Dataset/  # KSS dataset 저장 디렉토리
 ├── res/
@@ -162,7 +191,8 @@ python main.py --mode synthesize --text "안녕하세요. 한국어 TTS 프로�
 5. Pull Request를 생성합니다.
 
 ## 📚 참고 자료 
-- [Tacotron2](https://github.com/hccho2/Tacotron2-Wavenet-Korean-TTS/tree/master)
+- [Tacotron2] (https://github.com/NVIDIA/tacotron2)
+- [Text folder for Korean language](https://github.com/hccho2/Tacotron2-Wavenet-Korean-TTS/text)
 - [WaveGlow](https://github.com/NVIDIA/waveglow)
 
 ## 📜 라이선스 
