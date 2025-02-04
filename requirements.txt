@@ -13,3 +13,4 @@ soundfile
 jamo
 unidecode
 inflect
+librosa
