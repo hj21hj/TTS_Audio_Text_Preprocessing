@@ -94,8 +94,8 @@ class Synthesizer:
     """Tacotron2 + WaveGlow 기반 음성 합성 클래스"""
     def __init__(self, args, device):
         self.args = args
-        tacotron_check = args.tacotron_checkpoint
-        waveglow_check = args.waveglow_checkpoint
+        tacotron_check = args.best_tacotron_path
+        waveglow_check = args.best_waveglow__path
 
         self.hparams = get_hparams(args, parser)
         self.tacotron = Tacotron2(self.hparams).to(device).eval()
@@ -125,46 +125,58 @@ class Synthesizer:
 
 
 if __name__ == '__main__':
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    
     parser = argparse.ArgumentParser()
 
-    # 실행 단계
-    parser.add_argument('--mode', type=str, default='train_tacotron', choices=['train_tacotron', 'train_waveglow', 'synthesize'], # required=True,
-                        help='Choose mode: train_tacotron, train_waveglow, synthesize')
+    # ============= #
+    # 실행 단계 선택 #
+    # ============= #
+    parser.add_argument('--mode', type=str, default='train_waveglow', 
+                        choices=['train_tacotron', 'train_waveglow', 'synthesize'])
     
-    parser.add_argument('-o', '--output_directory', default="res/checkpoints",
+    # ============= #
+    # 모델 학습 세팅 #
+    # ============= #
+    # 경로 설정
+    parser.add_argument('--output_directory', default="res/checkpoints", # Best model 저장 경로
                         type=str, help='Directory to save checkpoints')
-    parser.add_argument('-l', '--log_directory', default="res/logs",
-                        type=str, help='Directory to save logs')
-    parser.add_argument('-c', '--checkpoint_path', type=str, default=None, help='Checkpoint path for loading')
-    
+    parser.add_argument('--log_directory', default="logs",               # 학습 log 저장 경로
+                        type=str, help='Directory to save logs') 
+    parser.add_argument('--checkpoint_path', type=str, default=None, help='Checkpoint path for loading') # 전이학습을 위한 model 경로
+        
+    # Tacotron2 필수 설정 항목   
     parser.add_argument('--warm_start', action='store_true', help='Load model weights only')
     parser.add_argument('--n_gpus', type=int, default=1, help='Number of GPUs')
+    
+    # WaveGlow 필수 설정 항목 
+    parser.add_argument('--config', type=str, help='JSON configuration file for WaveGlow training', required=False)
+    
+    # Tacotron2 - WaveGlow 공통 필수 설정 항목 
     parser.add_argument('--rank', type=int, default=0, help='GPU rank')
     parser.add_argument('--group_name', type=str, default='group_name', help='Distributed training group name')
 
-    parser.add_argument('--config', type=str, help='JSON configuration file for WaveGlow training', required=False)
     
-    # Path to load Best models 
-    parser.add_argument('--tacotron_checkpoint', default="res/checkpoints/best_tacotron2.pt",
+    
+    # ============= #
+    # 음성 합성 세팅 #
+    # ============= #
+    # 경로 설정 
+    parser.add_argument('--best_tacotron_path', default="res/checkpoints/best_tacotron2.pt",  # Best model 로드 경로
                         type=str, help='Path to load Best Tacotron2 model', required=False)
-    parser.add_argument('--waveglow_checkpoint', default="res/checkpoints/best_waveglow.pt", 
+    parser.add_argument('--best_waveglow_path', default="res/checkpoints/best_waveglow.pt",   # Best model 로드 경로
                         type=str, help='Path to load Best WaveGlow model', required=False)
-    
-    
-    parser.add_argument('--text', type=str, default="안녕하세요.", help='Text to synthesize', required=False)
-    parser.add_argument('--output_audio', default="res/output_audio/ex3.wav",
+    parser.add_argument('--output_audio', default="res/output_audio/ex3.wav",                 # audio output 저장 경로
                         type=str, help='Path to save synthesized audio', required=False)
 
-    add_hparams(parser)
+    # 변환 할 text 내용
+    parser.add_argument('--text', type=str, default="안녕하세요.", help='Text to synthesize', required=False)
 
+
+    add_hparams(parser)
     args = parser.parse_args()
     hparams = get_hparams(args, parser)
     
-
-
-
-
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
     if args.mode == 'train_tacotron':
         train_tacotron(args)
