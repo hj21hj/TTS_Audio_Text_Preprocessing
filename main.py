@@ -126,9 +126,8 @@ class Synthesizer:
 
 if __name__ == '__main__':
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    
     parser = argparse.ArgumentParser()
-
+    
     # ============= #
     # 실행 단계 선택 #
     # ============= #
@@ -155,8 +154,6 @@ if __name__ == '__main__':
     # Tacotron2 - WaveGlow 공통 필수 설정 항목 
     parser.add_argument('--rank', type=int, default=0, help='GPU rank')
     parser.add_argument('--group_name', type=str, default='group_name', help='Distributed training group name')
-
-    
     
     # ============= #
     # 음성 합성 세팅 #
@@ -168,16 +165,14 @@ if __name__ == '__main__':
                         type=str, help='Path to load Best WaveGlow model', required=False)
     parser.add_argument('--output_audio', default="res/output_audio/ex3.wav",                 # audio output 저장 경로
                         type=str, help='Path to save synthesized audio', required=False)
-
     # 변환 할 text 내용
     parser.add_argument('--text', type=str, default="안녕하세요.", help='Text to synthesize', required=False)
-
 
     add_hparams(parser)
     args = parser.parse_args()
     hparams = get_hparams(args, parser)
     
-
+    
     if args.mode == 'train_tacotron':
         train_tacotron(args)
 
