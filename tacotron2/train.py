@@ -18,7 +18,8 @@ from .hparams import add_hparams, get_hparams
 
 
 """
-수정사항 2가지
+수정사항
+0. cpu 환경에서도 작동하도록 train(device) 인자 추가
 1. DDP=True 로 학습된 사전학습 가중치를 불러오는 경우, module. prefix 가 붙어 로드 시 문제가 발생함.
     해당 prefix를 삭제하는 함수를 구현해 추가함.
 2. 체크포인트 로드 시, embedding.weight의 크기가 맞지 않은 부분은 무시하고, 나머지 부분만 가중치 불러와 사용함
