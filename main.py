@@ -4,6 +4,7 @@ import torch
 import numpy as np
 import json
 import soundfile as sf
+
 from tacotron2.hparams import get_hparams, add_hparams
 from tacotron2.train import train as tacotron_train
 
@@ -28,9 +29,6 @@ def train_tacotron(args):
     if args.log_directory is None:
         args.log_directory = "/Users/seohyeon/Desktop/코드모음/project/TTS/my_tts/res/logs"
 
-    hparams.training_files = "/Users/seohyeon/Desktop/코드모음/project/TTS/Dataset/tr_vl_ts/train.txt"
-    hparams.validation_files = "/Users/seohyeon/Desktop/코드모음/project/TTS/Dataset/tr_vl_ts/val.txt"
-    hparams.epochs = 1  
     hparams.cudnn_enabled = False
 
     torch.backends.cudnn.enabled = hparams.cudnn_enabled
@@ -46,7 +44,7 @@ def train_tacotron(args):
 def train_waveglow(args):
 
     if args.config is None:
-        args.config = "/Users/seohyeon/Desktop/코드모음/project/TTS/my_tts/waveglow/config.json"
+        args.config = "waveglow/config.json"
 
     # JSON 파일에서 설정 불러오기
     with open(args.config) as f:
@@ -134,7 +132,8 @@ class Synthesizer:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--mode', type=str, default = 'synthesize', choices=['train_tacotron', 'train_waveglow', 'synthesize'], # required=True,
+    # 실행 단계
+    parser.add_argument('--mode', type=str, default='train_tacotron', choices=['train_tacotron', 'train_waveglow', 'synthesize'], # required=True,
                         help='Choose mode: train_tacotron, train_waveglow, synthesize')
     
     parser.add_argument('-o', '--output_directory', default="/Users/seohyeon/Desktop/코드모음/project/TTS/my_tts/res/output",
