@@ -15,3 +15,4 @@ main{max-width:980px;margin:0 auto;padding:16px;display:grid;gap:16px}
 textarea#result-text{width:100%;min-height:220px;background:#0c1228;color:#e8ecf1;border:1px solid #263561;border-radius:10px;padding:12px;font-family:ui-monospace,Menlo,Consolas,monospace}
 audio{width:100%;margin-top:8px}
 .downloads{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+details{border:1px dashed #2b3c6f;border-radius:10px;padding:8px;background:#0c1228}

@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>라디오 음성 → 텍스트 변환 (Fix1)</title>
+  <title>라디오 음성 → 텍스트 변환 (Fix2)</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
     <h1>라디오 음성 → 텍스트 변환</h1>
-    <p class="sub">버튼 순서: <b>모델 준비</b> → 파일 업로드 → <b>텍스트 추출 실행</b></p>
+    <p class="sub">문제 해결판(Fix2) · 모델 준비 → 파일 업로드 → 텍스트 추출</p>
   </header>
 
   <main>
@@ -25,7 +25,7 @@
         <label for="lang-select">언어</label>
         <select id="lang-select">
           <option value="auto" selected>자동</option>
-          <option value="ko">ko</option>
+          <option value="ko">ko(한국어)</option>
           <option value="en">en</option>
           <option value="ja">ja</option>
           <option value="zh">zh</option>
@@ -39,13 +39,17 @@
           <span>경량(quantized)</span>
         </label>
 
+        <label class="checkbox">
+          <input id="show-debug" type="checkbox">
+          <span>진단 로그 보기</span>
+        </label>
+
         <button id="btn-init">모델 준비</button>
       </div>
 
       <div class="dropzone" id="dropzone">
         <input id="file-input" type="file" accept="audio/*, .mp3,.wav,.m4a,.aac,.flac,.ogg,.webm">
         <p><strong>파일을 끌어다 놓거나</strong> 클릭해서 선택하세요.</p>
-        <small>긴 파일은 처리 시간이 오래 걸릴 수 있습니다.</small>
       </div>
 
       <div class="actions">
@@ -54,6 +58,8 @@
       </div>
 
       <div class="status" id="status">상태: 대기 중</div>
+      <details id="debug" style="margin-top:8px;"><summary>디버그</summary><pre id="debug-pre" style="white-space:pre-wrap;"></pre></details>
+
       <audio id="audio" controls></audio>
     </section>
 
