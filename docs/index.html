@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>라디오 음성 → 텍스트 변환 (GitHub Pages, 브라우저 전용)</title>
+  <meta name="description" content="Whisper(Transformers.js) 기반 브라우저 음성 인식. 업로드한 음성을 로컬에서 처리하고 텍스트/SRT/VTT로 다운로드.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>라디오 음성 → 텍스트 변환</h1>
+    <p class="sub">브라우저에서 직접 실행 · 서버/키 필요 없음 · GitHub Pages 배포용</p>
+  </header>
+
+  <main>
+    <section class="panel">
+      <div class="controls">
+        <label for="model-select">모델</label>
+        <select id="model-select">
+          <option value="Xenova/whisper-tiny" selected>whisper-tiny (가장 빠름, 정확도 낮음)</option>
+          <option value="Xenova/whisper-base">whisper-base (보통)</option>
+          <option value="Xenova/whisper-small">whisper-small (느림, 정확도↑)</option>
+        </select>
+
+        <label for="lang-select">언어</label>
+        <select id="lang-select">
+          <option value="auto" selected>자동 감지</option>
+          <option value="ko">한국어(ko)</option>
+          <option value="en">영어(en)</option>
+          <option value="ja">일본어(ja)</option>
+          <option value="zh">중국어(zh)</option>
+        </select>
+
+        <label for="chunk-length">청크 길이(초)</label>
+        <input id="chunk-length" type="number" min="10" max="120" step="5" value="30">
+
+        <label class="checkbox">
+          <input id="quantized" type="checkbox" checked>
+          <span>경량(quantized) 가중치 사용</span>
+        </label>
+
+        <button id="btn-init">모델 준비</button>
+      </div>
+
+      <div class="dropzone" id="dropzone">
+        <input id="file-input" type="file" accept="audio/*, .mp3,.wav,.m4a,.aac,.flac,.ogg,.webm">
+        <p><strong>여기에 파일을 끌어다 놓거나</strong> 클릭해서 라디오 음성 파일을 선택하세요.</p>
+        <small>지원: mp3, wav, m4a, aac, flac, ogg, webm (긴 파일은 처리 시간이 오래 걸립니다)</small>
+      </div>
+
+      <div class="actions">
+        <button id="btn-transcribe" disabled>텍스트 추출 실행</button>
+        <button id="btn-clear">초기화</button>
+      </div>
+
+      <div class="status" id="status">상태: 대기 중</div>
+
+      <div class="preview">
+        <audio id="audio" controls></audio>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>결과</h2>
+      <textarea id="result-text" placeholder="여기에 인식된 텍스트가 표시됩니다."></textarea>
+
+      <div class="downloads">
+        <button id="btn-download-txt" disabled>텍스트(.txt) 다운로드</button>
+        <button id="btn-download-srt" disabled>자막(.srt) 다운로드</button>
+        <button id="btn-download-vtt" disabled>자막(.vtt) 다운로드</button>
+        <button id="btn-download-json" disabled>세그먼트(.json) 다운로드</button>
+      </div>
+    </section>
+
+    <section class="panel tips">
+      <h3>TIP</h3>
+      <ul>
+        <li>최초 실행 시 모델(수십 ~ 수백 MB)을 네트워크에서 가져옵니다. 한 번 로드하면 브라우저 캐시에 저장됩니다.</li>
+        <li>GPU가 있으면 자동으로 가속(WebGPU)합니다. 없으면 CPU(WASM)로 동작합니다.</li>
+        <li>긴 파일은 <b>청크 길이</b>를 20~45초 사이로 조절하면 메모리/속도 균형이 좋아집니다.</li>
+        <li>정확도를 올리고 싶으면 모델을 <b>base</b> 또는 <b>small</b>로 바꾸세요(더 느림).</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>Built with <a href="https://github.com/xenova/transformers.js" target="_blank" rel="noopener">Transformers.js (Whisper)</a>. No server, no API key.</p>
+  </footer>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
